@@ -475,7 +475,22 @@ class MediaLibrary
         /*
          * Validate folder names
          */
-        if (!preg_match('/^[\w@\.\s_\-\/]+$/iu', $path)) {
+        $regexWhitelist = [
+            '\w', // any word character
+            preg_quote('@', '/'),
+            preg_quote('.', '/'),
+            '\s', // whitespace character
+            preg_quote('-', '/'),
+            preg_quote('_', '/'),
+            preg_quote('/', '/'),
+            preg_quote('(', '/'),
+            preg_quote(')', '/'),
+            preg_quote('[', '/'),
+            preg_quote(']', '/'),
+            preg_quote('=', '/'),
+        ];
+
+        if (!preg_match('/^[' . implode('', $regexWhitelist) . ']+$/iu', $path)) {
             throw new ApplicationException(Lang::get('system::lang.media.invalid_path', compact('path')));
         }
 
